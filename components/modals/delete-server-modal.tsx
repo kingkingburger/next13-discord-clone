@@ -15,11 +15,11 @@ import {
 import { Button } from "@/components/ui/button";
 import axios from "axios";
 
-export const LeaveServerModal = () => {
+export const DeleteServerModal = () => {
   const { onOpen, isOpen, onClose, type, data } = useModal();
   const router = useRouter();
 
-  const isModalOpen = isOpen && type === "leaveServer";
+  const isModalOpen = isOpen && type === "deleteServer";
   const { server } = data;
 
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +27,7 @@ export const LeaveServerModal = () => {
   const onClick = async () => {
     try {
       setIsLoading(true);
-      await axios.patch(`/api/servers/${server?.id}/leave`);
+      await axios.delete(`/api/servers/${server?.id}`);
 
       onClose();
       router.refresh();
@@ -44,14 +44,14 @@ export const LeaveServerModal = () => {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Leave Server
+            Delete Server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Are you sure you want to leave{" "}
-            <span className="font-semibold text-indigo-500">
+            Are you sure you want to do this? <br />
+            <span className="text-indigo-500 font-semibold">
               {server?.name}
             </span>
-            ?
+            will be permanently
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
