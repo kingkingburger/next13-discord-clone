@@ -4,6 +4,7 @@ import { redirectToSignIn } from "@clerk/nextjs";
 import { getOrCreateConversation } from "@/lib/conversation";
 import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
+import { ChatHeader } from "@/components/chat/chat-header";
 
 interface MemberIdPageProps {
   params: {
@@ -38,6 +39,24 @@ const MemberIdPage = async ({ params }: MemberIdPageProps) => {
     params.memberId
   );
 
-  return <div>MemberId Id Page!</div>;
+  if (!conversation) {
+    return redirect(`/servers/${params.serverId}`);
+  }
+
+  const { memberOne, memberTwo } = conversation;
+
+  const otherMember =
+    memberOne.profileId === profile.id ? memberTwo : memberOne;
+
+  return (
+    <div className="bg-white dark:bg-[#13338] flex flex-col">
+      <ChatHeader
+        imageUrl={otherMember.profile.imageUrl}
+        name={otherMember.profile.name}
+        serverId={params.serverId}
+        type="conversation"
+      />
+    </div>
+  );
 };
 export default MemberIdPage;
