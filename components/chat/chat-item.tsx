@@ -3,8 +3,10 @@
 import { Member, MemberRole, Profile } from "@prisma/client";
 import { UserAvatar } from "@/components/user-avatar";
 import { ActionTooltip } from "@/components/action-tooltip";
-import { FileIcon, ShieldAlert, ShieldCheck } from "lucide-react";
+import { Edit, FileIcon, ShieldAlert, ShieldCheck, Trash } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface ChatItemProps {
   id: string;
@@ -39,6 +41,9 @@ export const ChatItem = ({
   socketUrl,
   socketQuery,
 }: ChatItemProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
   const fileType = fileUrl?.split(".").pop();
 
   const isAdmin = currentMember.role === MemberRole.ADMIN;
@@ -50,7 +55,7 @@ export const ChatItem = ({
   const isImage = !isPDF && fileUrl;
 
   return (
-    <div className="relactive group flex items-center hover:bg-black/5 p-4 transition w-full">
+    <div className="relative group flex items-center hover:bg-black/5 p-4 transition w-full">
       <div className="group flex gap-x-2 items-start w-full">
         <div className="cursor-pointer hover:drop-shadow-md transition">
           <UserAvatar src={member.profile.imageUrl} />
@@ -97,8 +102,39 @@ export const ChatItem = ({
               </a>
             </div>
           )}
+          {!fileUrl && !isEditing && (
+            <p
+              className={cn(
+                "text-sm text-zinc-600 dark:text-zinc-300",
+                deleted &&
+                  "italic text-zinc-500 dark:text-zinc-400 text-xs mt-1"
+              )}
+            >
+              {content}
+              {isUpdated && !deleted && (
+                <span className="text-[10px] mx-2 text-zinc-500 dark:text-zinc-400">
+                  (edited)
+                </span>
+              )}
+            </p>
+          )}
         </div>
       </div>
+      {canDeleteMessage && (
+        <div className="hidden group-hover:flex items-center gap-x-2 absolute p-1 -top-2 right-5 bg-white dark:bg-zinc-800 border rounded-sm">
+          {canEditMessage && (
+            <ActionTooltip label="Edit">
+              <Edit
+                onClick={() => setIsEditing(true)}
+                className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition"
+              />
+            </ActionTooltip>
+          )}
+          <ActionTooltip label="Delete">
+            <Trash className="cursor-pointer ml-auto w-4 h-4 text-zinc-500 hover:text-zinc-600 dark:hover:text-zinc-300 transition" />
+          </ActionTooltip>
+        </div>
+      )}
     </div>
   );
 };
