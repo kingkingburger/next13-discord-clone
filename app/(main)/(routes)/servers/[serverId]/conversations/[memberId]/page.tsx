@@ -51,7 +51,7 @@ const MemberIdPage = async ({ params }: MemberIdPageProps) => {
     memberOne.profileId === profile.id ? memberTwo : memberOne;
 
   return (
-    <div className="bg-white dark:bg-[#13338] flex flex-col">
+    <div className="bg-white dark:bg-[#313338] flex flex-col h-full">
       <ChatHeader
         imageUrl={otherMember.profile.imageUrl}
         name={otherMember.profile.name}
@@ -59,25 +59,25 @@ const MemberIdPage = async ({ params }: MemberIdPageProps) => {
         type="conversation"
       />
       <ChatMessages
-        name={otherMember.profile.name}
         member={currentMember}
+        name={otherMember.profile.name}
         chatId={conversation.id}
+        type="conversation"
         apiUrl="/api/direct-messages"
+        paramKey="conversationId"
+        paramValue={conversation.id}
         socketUrl="/api/socket/direct-messages"
         socketQuery={{
           conversationId: conversation.id,
         }}
-        paramKey="conversationId"
-        paramValue={conversation.id}
-        type="conversation"
       />
       <ChatInput
+        name={otherMember.profile.name}
+        type="conversation"
         apiUrl="/api/socket/direct-messages"
         query={{
           conversationId: conversation.id,
         }}
-        name={otherMember.profile.name}
-        type="conversation"
       />
     </div>
   );
