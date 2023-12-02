@@ -1,9 +1,8 @@
 "use client";
 
 import qs from "query-string";
+import axios from "axios";
 import { useState } from "react";
-import { useModal } from "@/hooks/use-modal-store";
-import { useRouter } from "next/navigation";
 
 import {
   Dialog,
@@ -13,8 +12,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useModal } from "@/hooks/use-modal-store";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
 
 export const DeleteMessageModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -31,6 +30,7 @@ export const DeleteMessageModal = () => {
         url: apiUrl || "",
         query,
       });
+
       await axios.delete(url);
 
       onClose();
@@ -54,7 +54,7 @@ export const DeleteMessageModal = () => {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
-          <div className="flex items-center justify-center w-full">
+          <div className="flex items-center justify-between w-full">
             <Button disabled={isLoading} onClick={onClose} variant="ghost">
               Cancel
             </Button>
